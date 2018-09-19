@@ -17,6 +17,7 @@ var index = require('./routes/index');
 var equipments = require('./routes/equipments');
 var login = require('./routes/login');
 var users = require('./routes/users');
+var workout = require('./routes/workout');
 
 var passport = require("passport");
 
@@ -71,6 +72,7 @@ app.use(function (req, res, next) {
 });
 
 app.use('/', index);
+app.use('/api/v1/workouts', workout);
 app.use('/api/v1/equipments', equipments);
 app.use('/api/v1/login', login);
 app.use('/api/v1/users', users);

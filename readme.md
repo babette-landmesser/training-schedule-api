@@ -15,6 +15,29 @@
 
 
 # Available Endpoints
+### Equipments
+#### `POST /api/v1/equipments`
+```
+{
+    name: string,
+    type: string,
+    stress_type: string,
+    recommended_sets: string,
+    info: string,
+    recommended_duration?: number,
+    recommended_repetition?: number,
+    recommended_weight?: number
+}
+```
+
+### Workouts
+#### `POST /api/v1/workouts`
+```
+{
+    exercises_ids: number[]
+}
+```
+
 ### Login
 #### `POST /api/v1/login`
 ```

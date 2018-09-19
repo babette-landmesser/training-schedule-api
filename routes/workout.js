@@ -34,7 +34,7 @@ passport.use(strategy);
 router.get('/', passport.authenticate('jwt', {session: false}), function (req, res, next) {
   const user_id = req.user.id;
 
-  connection.query('SELECT * from equipments WHERE user_id="' + user_id +'"', function (error, results, fields) {
+  connection.query('SELECT * from workouts WHERE user_id="' + user_id +'"', function (error, results, fields) {
     if (error) {
       res.send({"status": 500, "error": error, "response": null});
       //If there is error, we send the error in the error section with 500 status
@@ -54,50 +54,17 @@ router.post('/', passport.authenticate('jwt', {session: false}), function (req, 
     requestErrorResponse = 'Required fields are incomplete';
 
 
-  const name = req.body.name,
-    type = req.body.type,
-    stress_type = req.body.stress_type,
-    recommended_sets = req.body.recommended_sets,
-    info = req.body.info || null,
+  const exercises_ids = req.body.exercises_ids,
+    date = new Date();
     user_id = req.user.id;
-
-  if (!name || !type || !stress_type | !recommended_sets) {
-    requestHasErrors = true;
-  }
-
-  let recommended_duration,
-    recommended_repetition,
-    recommended_weight;
-
-  if (stress_type === 'REPETITION') {
-    recommended_duration = 0;
-    recommended_repetition = req.body.recommended_repetition;
-    recommended_weight = req.body.recommended_weight;
-
-    if (!recommended_repetition || !recommended_weight) {
-      requestHasErrors = true;
-    }
-
-  } else if (stress_type === 'DURATION') {
-    recommended_duration = req.body.recommended_duration;
-    recommended_repetition = 0;
-    recommended_weight = 0;
-
-    if (!recommended_duration) {
-      requestHasErrors = true;
-    }
-  }
 
   if (requestHasErrors) {
     res.send(JSON.stringify({"status": 400, "error": null, "response": {message: requestErrorResponse}}));
     return;
   }
 
-  const sql = "INSERT INTO `equipments`(`name`,`type`,`stress_type`, `recommended_sets`, `info`, `recommended_duration`,"
-              + "`recommended_repetition`, `recommended_weight`, `user_id`)"
-              + "VALUES ('" + name + "','"
-              + type + "','" + stress_type + "','" + recommended_sets + "','" + info + "','" + recommended_duration + "','"
-              + recommended_repetition + "','" + recommended_weight + "', '"+ user_id +"')";
+  const sql = "INSERT INTO `workouts`(`date`,`exercises_ids`,`user_id`)"
+              + "VALUES (NOW(),'" + exercises_ids + "','" + user_id +"')";
 
   connection.query(sql, function (err, result) {
     if (err) {
