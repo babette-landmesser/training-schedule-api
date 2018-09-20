@@ -61,7 +61,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), function (req, 
     info = req.body.info || null,
     user_id = req.user.id;
 
-  if (!name || !type || !stress_type | !recommended_sets) {
+  if (!name || !type || !stress_type || !recommended_sets) {
     requestHasErrors = true;
   }
 

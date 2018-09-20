@@ -34,7 +34,7 @@ passport.use(strategy);
 router.get('/', passport.authenticate('jwt', {session: false}), function (req, res, next) {
   const user_id = req.user.id;
 
-  connection.query('SELECT * from workouts WHERE user_id="' + user_id +'"', function (error, results, fields) {
+  connection.query('SELECT * from exercises WHERE user_id="' + user_id +'"', function (error, results, fields) {
     if (error) {
       res.send({"status": 500, "error": error, "response": null});
       //If there is error, we send the error in the error section with 500 status
@@ -53,15 +53,22 @@ router.post('/', passport.authenticate('jwt', {session: false}), function (req, 
   let requestHasErrors = false,
     requestErrorResponse = 'Required fields are incomplete';
 
-  const user_id = req.user.id;
+
+  const equipment_id = req.body.equipment_id,
+    sets_id = req.body.sets_id,
+    user_id = req.user.id;
+
+  if (!name || !equipment_id || !sets_id) {
+    requestHasErrors = true;
+  }
 
   if (requestHasErrors) {
     res.send(JSON.stringify({"status": 400, "error": null, "response": {message: requestErrorResponse}}));
     return;
   }
 
-  const sql = "INSERT INTO `workouts`(`date`,`user_id`)"
-              + "VALUES (NOW(),'" + user_id +"')";
+  const sql = "INSERT INTO `exercises`(`equipment_id`,`sets_id`, `user_id`)"
+              + "VALUES ('" + equipment_id + "','" + sets_id + "', '"+ user_id +"')";
 
   connection.query(sql, function (err, result) {
     if (err) {

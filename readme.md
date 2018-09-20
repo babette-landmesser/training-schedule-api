@@ -33,8 +33,27 @@
 ### Workouts
 #### `POST /api/v1/workouts`
 ```
+{}
+```
+
+### Sets
+#### `POST /api/v1/sets`
+```
 {
-    exercises_ids: number[]
+    equipment_ids: number[],
+    workout_id: number,
+    duration?: number,
+    repetition?: number,
+    weight?: number
+}
+```
+
+### Exercises
+#### `POST /api/v1/exercises`
+```
+{
+    equipment_id: number[],
+    sets_id: number[]
 }
 ```
 
