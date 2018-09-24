@@ -34,7 +34,7 @@ passport.use(strategy);
 router.get('/', passport.authenticate('jwt', {session: false}), function (req, res, next) {
   const user_id = req.user.id;
 
-  connection.query('SELECT * from equipments WHERE user_id="' + user_id +'"', function (error, results, fields) {
+  connection.query('SELECT * from equipments WHERE user_id="' + user_id + '"', function (error, results, fields) {
     if (error) {
       res.send({"status": 500, "error": error, "response": null});
       //If there is error, we send the error in the error section with 500 status
@@ -47,12 +47,26 @@ router.get('/', passport.authenticate('jwt', {session: false}), function (req, r
 });
 
 /**
+ * get just one equipment by id
+ */
+router.get('/:id', passport.authenticate('jwt', {session: false}), function (request, response, next) {
+  connection.query('SELECT * FROM equipments WHERE user_id="' + request.user.id + '" AND id="' + request.params.id + '"', function(error, results, fields) {
+    if (error) {
+      response.send({"status": 500, "error": error});
+    } else if (results.length > 1) {
+      response.send({'status': 500, 'error': "An error occured"});
+    } else {
+      response.send({'status': 200, 'response': results});
+    }
+  });
+});
+
+/**
  * POST equipment to create a new equipment for current user
  */
 router.post('/', passport.authenticate('jwt', {session: false}), function (req, res, next) {
   let requestHasErrors = false,
     requestErrorResponse = 'Required fields are incomplete';
-
 
   const name = req.body.name,
     type = req.body.type,
@@ -97,7 +111,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), function (req, 
               + "`recommended_repetition`, `recommended_weight`, `user_id`)"
               + "VALUES ('" + name + "','"
               + type + "','" + stress_type + "','" + recommended_sets + "','" + info + "','" + recommended_duration + "','"
-              + recommended_repetition + "','" + recommended_weight + "', '"+ user_id +"')";
+              + recommended_repetition + "','" + recommended_weight + "', '" + user_id + "')";
 
   connection.query(sql, function (err, result) {
     if (err) {

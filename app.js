@@ -19,6 +19,7 @@ var login = require('./routes/login');
 var users = require('./routes/users');
 var workout = require('./routes/workout');
 var exercises = require('./routes/exercises');
+var sets = require('./routes/sets');
 
 var passport = require("passport");
 
@@ -56,13 +57,13 @@ app.use(function (req, res, next) {
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
   // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
 
   // Set to true if you need the website to include cookies in the requests sent
   // to the API (e.g. in case you use sessions)
@@ -78,6 +79,7 @@ app.use('/api/v1/equipments', equipments);
 app.use('/api/v1/exercises', exercises);
 app.use('/api/v1/login', login);
 app.use('/api/v1/users', users);
+app.use('/api/v1/sets', sets);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
