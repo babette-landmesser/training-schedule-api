@@ -46,6 +46,25 @@ router.get('/', passport.authenticate('jwt', {session: false}), function (req, r
   });
 });
 
+
+/**
+ * Get all sets of workout with id
+ */
+router.get('/workout/:id', passport.authenticate('jwt', {session: false}), function (req, res, next) {
+  const user_id = req.user.id;
+
+  connection.query('SELECT * from sets WHERE user_id="' + user_id +'" AND workout_id="'+req.params.id +'"', function (error, results, fields) {
+    if (error) {
+      res.send({"status": 500, "error": error, "response": null});
+      //If there is error, we send the error in the error section with 500 status
+    } else {
+      res.send({"status": 200, "error": null, "response": results});
+      //If there is no error, all is good and response is 200OK.
+    }
+
+  });
+});
+
 /**
  * POST equipment to create a new equipment for current user
  */

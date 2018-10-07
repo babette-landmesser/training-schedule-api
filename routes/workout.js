@@ -64,6 +64,24 @@ router.get('/:id', passport.authenticate('jwt', {session: false}), function (req
 });
 
 /**
+ * Delete workout data with id param
+ */
+router.delete('/:id', passport.authenticate('jwt', {session: false}), function (req, res, next) {
+  const user_id = req.user.id;
+
+  connection.query('DELETE workouts, sets FROM workouts LEFT JOIN sets ON workouts.id = sets.workout_id WHERE workouts.user_id="' + user_id + '"'
+                   + ' AND workouts.id="'+ req.params.id +'"', function(error, result, fields) {
+    if (error) {
+      res.send({'status': 500, error: error});
+    } else if (result.length > 1) {
+      res.send({'status': 500, error: 'An error occured.'});
+    } else {
+      res.send({'status': 200, response: result});
+    }
+  })
+});
+
+/**
  * POST equipment to create a new equipment for current user
  */
 router.post('/', passport.authenticate('jwt', {session: false}), function (req, res, next) {
